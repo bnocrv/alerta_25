@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alerta 25 | Monitoramento Comunitário</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <section id="loginScreen" class="login-screen">
+      <div class="login-visual" aria-hidden="true">
+        <div class="map-grid"></div>
+        <div class="pulse pulse-one"></div>
+        <div class="pulse pulse-two"></div>
+        <div class="pulse pulse-three"></div>
+      </div>
+
+      <div class="login-panel">
+        <div class="brand-mark">25</div>
+        <p class="eyebrow">ODS 11 | Cidades e Comunidades Sustentáveis</p>
+        <h1>Alerta 25</h1>
+        <p class="login-copy">
+          Monitoramento comunitário de ocorrências urbanas na região da Avenida 25 de Agosto,
+          com foco na Rua José Herdy, em Duque de Caxias - RJ.
+        </p>
+
+        <form id="loginForm" class="form">
+          <label for="username">Usuário</label>
+          <input id="username" name="username" type="text" autocomplete="username" placeholder="admin" required>
+
+          <label for="password">Senha</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="123456" required>
+
+          <p id="loginError" class="message error-message" role="alert"></p>
+          <button type="submit" class="primary-button">Entrar no dashboard</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="dashboardScreen" class="dashboard-screen hidden">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-mark small">25</div>
+          <div>
+            <strong>Alerta 25</strong>
+            <span>Monitoramento Comunitário</span>
+          </div>
+        </div>
+
+        <nav class="nav-list" aria-label="Navegação do protótipo">
+          <a href="#overview">Dashboard</a>
+          <a href="#about">Sobre</a>
+          <a href="#register">Registrar</a>
+          <a href="#insights">Análises</a>
+          <a href="#metric">Métrica</a>
+          <a href="#report">Relatório</a>
+          <a href="#occurrences">Ocorrências</a>
+        </nav>
+
+        <button id="logoutButton" class="secondary-button">Sair</button>
+      </aside>
+
+      <div class="content">
+        <div class="topbar">
+          <div>
+            <span>Dashboard</span>
+            <strong>Região monitorada: Rua José Herdy, 25 de Agosto</strong>
+          </div>
+          <div class="topbar-actions">
+            <span id="lastUpdated">Atualizado agora</span>
+            <button id="presentationButton" type="button" class="ghost-button">Modo apresentação</button>
+          </div>
+        </div>
+
+        <nav class="quick-tabs" aria-label="Atalhos principais">
+          <a href="#overview">Visão geral</a>
+          <a href="#insights">Mapa e análise</a>
+          <a href="#register">Registro</a>
+          <a href="#occurrences">Ocorrências</a>
+          <a href="#report">Relatório</a>
+        </nav>
+
+        <header id="overview" class="hero-section">
+          <div>
+            <p class="eyebrow">Protótipo acadêmico funcional</p>
+            <h2>Alerta 25 — Monitoramento Comunitário de Ocorrências Urbanas</h2>
+            <p>
+              Plataforma simulada para registrar, acompanhar e visualizar ocorrências relacionadas à segurança pública
+              na Rua José Herdy e no entorno da Avenida 25 de Agosto.
+            </p>
+            <div class="hero-badges">
+              <span>ODS 11</span>
+              <span>Duque de Caxias - RJ</span>
+              <span>Dados simulados</span>
+            </div>
+          </div>
+          <div class="hero-metric">
+            <span>Ocorrências registradas hoje</span>
+            <strong id="todayMetricHero">0</strong>
+            <small>Métrica principal do projeto</small>
+          </div>
+        </header>
+
+        <section class="summary-grid" aria-label="Resumo das ocorrências">
+          <article class="summary-card">
+            <div class="summary-icon">#</div>
+            <span>Total de ocorrências</span>
+            <strong id="totalOccurrences">0</strong>
+          </article>
+          <article class="summary-card highlight">
+            <div class="summary-icon alert-icon">!</div>
+            <span>Ocorrências registradas hoje</span>
+            <strong id="todayOccurrences">0</strong>
+          </article>
+          <article class="summary-card">
+            <div class="summary-icon type-icon">T</div>
+            <span>Tipo mais comum</span>
+            <strong id="mostCommonType">-</strong>
+          </article>
+          <article class="summary-card">
+            <div class="summary-icon time-icon">H</div>
+            <span>Última ocorrência</span>
+            <strong id="lastOccurrence">-</strong>
+          </article>
+        </section>
+
+        <section class="risk-panel" aria-label="Indicador de risco da região">
+          <div>
+            <p class="eyebrow">Indicador de risco da região</p>
+            <h3 id="riskLevel">Baixo</h3>
+            <p id="riskDescription">Baseado na quantidade de ocorrências registradas hoje.</p>
+          </div>
+          <div class="risk-scale" aria-hidden="true">
+            <span>Baixo</span>
+            <span>Moderado</span>
+            <span>Alto</span>
+          </div>
+        </section>
+
+        <section class="panel recent-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Atividade recente</p>
+              <h3>Últimas movimentações</h3>
+            </div>
+          </div>
+          <div id="recentActivity" class="timeline"></div>
+        </section>
+
+        <section class="panel flow-panel" aria-labelledby="flowTitle">
+          <div>
+            <p class="eyebrow">Fluxo principal visível</p>
+            <h3 id="flowTitle">Jornada do protótipo</h3>
+          </div>
+          <div class="flow-steps">
+            <span>Login</span>
+            <span>Dashboard</span>
+            <span>Registrar Ocorrência</span>
+            <span>Visualizar Métrica</span>
+            <span>Consultar Lista</span>
+          </div>
+        </section>
+
+        <section id="about" class="panel about-panel" aria-labelledby="aboutTitle">
+          <div>
+            <p class="eyebrow">Sobre a solução</p>
+            <h3 id="aboutTitle">Protótipo sem backend para demonstração acadêmica</h3>
+            <p>
+              O Alerta 25 organiza registros simulados de ocorrências urbanas e mostra como uma ferramenta comunitária
+              poderia apoiar a leitura de dados locais, a consulta de eventos e o acompanhamento de indicadores diários.
+            </p>
+          </div>
+          <div class="storage-notice">
+            <strong>Armazenamento local</strong>
+            <span>Dados salvos temporariamente neste navegador via localStorage.</span>
+          </div>
+        </section>
+
+        <section id="register" class="panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Novo registro</p>
+              <h3>Registrar ocorrência</h3>
+            </div>
+            <p>Status inicial automático: <strong>Registrada</strong></p>
+          </div>
+
+          <form id="occurrenceForm" class="occurrence-form">
+            <fieldset>
+              <legend>Dados da ocorrência</legend>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="title">Título</label>
+                  <input id="title" name="title" type="text" placeholder="Ex.: Movimentação suspeita" required>
+                </div>
+
+                <div class="field">
+                  <label for="type">Tipo</label>
+                  <select id="type" name="type" required>
+                    <option value="">Selecione</option>
+                    <option>Assalto</option>
+                    <option>Furto</option>
+                    <option>Atividade suspeita</option>
+                    <option>Iluminação precária</option>
+                    <option>Outro</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="priority">Prioridade</label>
+                  <select id="priority" name="priority" required>
+                    <option value="">Selecione</option>
+                    <option>Baixa</option>
+                    <option>Média</option>
+                    <option>Alta</option>
+                  </select>
+                </div>
+
+                <div class="field wide">
+                  <label for="description">Descrição</label>
+                  <textarea id="description" name="description" rows="4" placeholder="Descreva a ocorrência observada" required></textarea>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Local e horário</legend>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="location">Localização</label>
+                  <input id="location" name="location" type="text" placeholder="Rua José Herdy, 25 de Agosto" required>
+                </div>
+
+                <div class="field">
+                  <label for="date">Data</label>
+                  <input id="date" name="date" type="date" required>
+                </div>
+
+                <div class="field">
+                  <label for="time">Hora</label>
+                  <input id="time" name="time" type="time" required>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="form-actions">
+              <p id="successMessage" class="message success-message" role="status"></p>
+              <button type="submit" class="primary-button">Cadastrar ocorrência</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="insights" class="insights-grid">
+          <article class="panel chart-panel">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">Gráfico simples</p>
+                <h3>Ocorrências por tipo</h3>
+              </div>
+            </div>
+            <div id="typeChart" class="chart-list" aria-label="Gráfico de ocorrências por tipo"></div>
+          </article>
+
+          <article class="panel analysis-panel">
+            <div>
+              <p class="eyebrow">Análise inteligente da região</p>
+              <h3>Leitura automática dos dados</h3>
+            </div>
+            <div id="regionAnalysis" class="analysis-list"></div>
+          </article>
+        </section>
+
+        <section class="panel map-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Mapa real com OpenStreetMap</p>
+              <h3>Rua Professor José de Souza Herdy e entorno</h3>
+            </div>
+            <p>Marcadores e calor são simulados a partir dos registros do protótipo.</p>
+          </div>
+          <div class="map-shell">
+            <div id="realMap" aria-label="Mapa interativo da região monitorada"></div>
+            <div id="mapFallback" class="map-fallback hidden">
+              Mapa interativo indisponível. Verifique a conexão com a internet para carregar o OpenStreetMap.
+            </div>
+          </div>
+          <div class="map-legend">
+            <span><i class="legend-primary"></i> Ocorrência</span>
+            <span><i class="legend-danger"></i> Calor alto</span>
+            <span><i class="legend-warning"></i> Calor moderado</span>
+            <span><i class="legend-success"></i> Ponto de referência</span>
+          </div>
+        </section>
+
+        <section id="metric" class="metric-section">
+          <div class="metric-card">
+            <p class="eyebrow">Métrica principal exigida</p>
+            <h3>Ocorrências registradas hoje: <span id="projectMetricValue">0</span></h3>
+            <p>
+              Quantidade de ocorrências registradas por dia, calculada pelo total de registros realizados dentro
+              de um período de 24 horas.
+            </p>
+            <div class="metric-extra">
+              <span>Período analisado: últimas 24 horas</span>
+              <span>Fonte: registros simulados + registros locais</span>
+            </div>
+          </div>
+
+          <div class="panel metric-explanation">
+            <h3>Métrica do Projeto</h3>
+            <ul>
+              <li><strong>Onde aparece:</strong> dashboard principal.</li>
+              <li><strong>Como é apresentada:</strong> número total diário.</li>
+              <li><strong>Como é calculada:</strong> contagem das ocorrências com data igual à data atual.</li>
+              <li><strong>De onde vêm os dados:</strong> dados simulados e registros feitos no protótipo.</li>
+              <li><strong>Período analisado:</strong> últimas 24 horas do dia atual.</li>
+              <li><strong>Fonte:</strong> registros simulados iniciais + registros locais cadastrados pelo usuário.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="occurrences" class="panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Consulta</p>
+              <h3>Lista de ocorrências cadastradas</h3>
+              <p id="resultsCounter" class="results-counter">Exibindo 0 de 0 ocorrências.</p>
+            </div>
+
+            <div class="filter-actions">
+              <div class="filters" aria-label="Filtros de ocorrências">
+                <label>
+                  Busca
+                  <input id="searchInput" type="search" placeholder="Título, descrição ou local">
+                </label>
+                <label>
+                  Período
+                  <select id="periodFilter">
+                    <option value="Todos">Todo o período</option>
+                    <option value="Hoje">Hoje</option>
+                    <option value="7">Últimos 7 dias</option>
+                    <option value="30">Últimos 30 dias</option>
+                  </select>
+                </label>
+                <label>
+                  Tipo
+                  <select id="typeFilter">
+                    <option value="Todos">Todos</option>
+                    <option>Assalto</option>
+                    <option>Furto</option>
+                    <option>Atividade suspeita</option>
+                    <option>Iluminação precária</option>
+                    <option>Outro</option>
+                  </select>
+                </label>
+                <label>
+                  Status
+                  <select id="statusFilter">
+                    <option value="Todos">Todos</option>
+                    <option>Registrada</option>
+                    <option>Em análise</option>
+                    <option>Resolvida</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="list-actions">
+                <button id="clearFiltersButton" type="button" class="ghost-button">Limpar filtros</button>
+                <button id="resetDataButton" type="button" class="danger-button">Resetar dados</button>
+                <button id="exportButton" type="button" class="outline-button">Exportar dados</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="occurrenceList" class="occurrence-list" aria-live="polite"></div>
+          <div id="emptyState" class="empty-state hidden">
+            <strong>Nenhuma ocorrência encontrada</strong>
+            <span>Ajuste a busca ou remova os filtros aplicados.</span>
+            <button id="emptyClearButton" type="button" class="ghost-button">Limpar filtros</button>
+          </div>
+        </section>
+
+        <section id="report" class="panel report-panel">
+          <div class="report-hero">
+            <div>
+              <p class="eyebrow">Relatório do projeto</p>
+              <h3>Tela pronta para apresentação</h3>
+              <p>Resumo visual da proposta, métrica principal e leitura dos dados simulados para uso em PPT.</p>
+            </div>
+            <div class="report-badge">ODS 11</div>
+          </div>
+          <div class="report-grid">
+            <article>
+              <span>Solução</span>
+              <strong>Monitoramento comunitário de ocorrências urbanas</strong>
+            </article>
+            <article>
+              <span>ODS</span>
+              <strong>ODS 11 — Cidades e Comunidades Sustentáveis</strong>
+            </article>
+            <article>
+              <span>Métrica principal</span>
+              <strong id="reportToday">0 ocorrências hoje</strong>
+            </article>
+            <article>
+              <span>Resumo analítico</span>
+              <strong id="reportInsight">Dados simulados em análise</strong>
+            </article>
+          </div>
+        </section>
+
+        <footer class="app-footer">
+          <div class="footer-brand">
+            <div class="brand-mark small">25</div>
+            <div>
+              <strong>Alerta 25</strong>
+              <span>Monitoramento Comunitário de Ocorrências Urbanas</span>
+            </div>
+          </div>
+          <div class="footer-info">
+            <span>© 2026 Bruno Carvalho</span>
+            <span>Projeto acadêmico | Tópicos Especiais</span>
+            <span>ODS 11 — Cidades e Comunidades Sustentáveis</span>
+          </div>
+          <div class="footer-tech">
+            <span>HTML5</span>
+            <span>CSS3</span>
+            <span>JavaScript</span>
+            <span>OpenStreetMap</span>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <div id="detailModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" data-close-modal></div>
+    <article class="modal-card">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Detalhes da ocorrência</p>
+          <h3 id="modalTitle">Ocorrência</h3>
+        </div>
+        <button id="closeModalButton" type="button" class="icon-button" aria-label="Fechar detalhes">×</button>
+      </div>
+      <div id="modalContent" class="modal-content"></div>
+    </article>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
