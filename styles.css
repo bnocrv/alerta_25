@@ -40,6 +40,10 @@ body {
   line-height: 1.5;
 }
 
+body:has(.login-screen:not(.hidden)) {
+  overflow: hidden;
+}
+
 button,
 input,
 select,
@@ -56,32 +60,22 @@ button {
 }
 
 .login-screen {
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 470px);
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
   background: var(--sidebar);
+  overflow: hidden;
 }
 
 .login-visual {
   position: relative;
   overflow: hidden;
-  min-height: 100vh;
+  height: 100vh;
   background:
-    linear-gradient(120deg, rgba(17, 24, 39, 0.92), rgba(29, 78, 216, 0.72)),
-    linear-gradient(135deg, #111827, #1e3a8a 48%, #0f766e);
-}
-
-.login-visual::before {
-  content: "Rua José Herdy • 25 de Agosto • Duque de Caxias";
-  position: absolute;
-  left: 48px;
-  bottom: 48px;
-  max-width: 580px;
-  color: rgba(255, 255, 255, 0.88);
-  font-size: clamp(2rem, 5vw, 4.8rem);
-  font-weight: 850;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
+    linear-gradient(120deg, rgba(12, 20, 38, 0.94), rgba(29, 78, 216, 0.74)),
+    radial-gradient(circle at 72% 34%, rgba(22, 163, 74, 0.28), transparent 260px),
+    linear-gradient(135deg, #111827, #1e3a8a 52%, #0f766e);
 }
 
 .map-grid {
@@ -97,8 +91,8 @@ button {
 
 .pulse {
   position: absolute;
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   border: 4px solid #ffffff;
   border-radius: 50%;
   background: var(--danger);
@@ -108,12 +102,12 @@ button {
 }
 
 .pulse-one {
-  top: 26%;
+  top: 30%;
   left: 28%;
 }
 
 .pulse-two {
-  top: 56%;
+  top: 58%;
   left: 62%;
   background: var(--warning);
   box-shadow:
@@ -122,31 +116,113 @@ button {
 }
 
 .pulse-three {
-  top: 72%;
-  left: 38%;
+  top: 66%;
+  left: 46%;
   background: var(--success);
   box-shadow:
     0 0 0 15px rgba(22, 163, 74, 0.18),
     0 14px 26px rgba(15, 23, 42, 0.28);
 }
 
+.login-visual-copy {
+  position: absolute;
+  left: clamp(32px, 6vw, 72px);
+  bottom: clamp(28px, 6vh, 56px);
+  max-width: 560px;
+  padding-right: 28px;
+}
+
+.login-visual-copy span,
+.login-visual-copy strong,
+.login-visual-copy p {
+  display: block;
+}
+
+.login-visual-copy span {
+  margin-bottom: 10px;
+  color: #bfdbfe;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.login-visual-copy strong {
+  color: #ffffff;
+  font-size: clamp(2.4rem, 4.8vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.login-visual-copy p {
+  margin-top: 10px;
+  color: rgba(219, 234, 254, 0.86);
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  font-weight: 800;
+}
+
 .login-panel {
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 48px;
-  background: var(--surface);
+  padding: clamp(18px, 3vw, 42px);
+  background:
+    radial-gradient(circle at top right, rgba(29, 78, 216, 0.08), transparent 260px),
+    var(--surface);
+}
+
+.login-card {
+  width: min(100%, 520px);
+  margin: 0 auto;
+  padding: 0;
+}
+
+.login-heading {
+  margin: 18px 0 14px;
+}
+
+.login-heading h1 {
+  margin-bottom: 8px;
+  font-size: clamp(2.55rem, 5vw, 3.75rem);
+  line-height: 0.96;
+}
+
+.login-heading p {
+  max-width: 46ch;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.login-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.login-meta span {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--surface-soft);
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 62px;
-  height: 62px;
+  width: 54px;
+  height: 54px;
   color: #ffffff;
   background: linear-gradient(135deg, var(--primary), var(--cyan));
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1.55rem;
   font-weight: 900;
   box-shadow: 0 14px 30px rgba(29, 78, 216, 0.22);
@@ -159,10 +235,55 @@ button {
   flex: 0 0 auto;
 }
 
+.menu-brand {
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 0;
+  padding: 0;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+}
+
+.menu-lines {
+  display: none;
+  width: 24px;
+  height: 18px;
+  position: relative;
+  place-items: center;
+  border-radius: 8px;
+}
+
+.menu-lines span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 2px;
+  border-radius: 999px;
+  background: #dbeafe;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  transform: translate(-50%, -50%);
+}
+
+.menu-lines span:nth-child(1) {
+  transform: translate(-50%, calc(-50% - 7px));
+}
+
+.menu-lines span:nth-child(3) {
+  transform: translate(-50%, calc(-50% + 7px));
+}
+
 .eyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 7px;
   color: var(--primary);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 850;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -204,13 +325,14 @@ h3 {
 
 .form {
   display: grid;
-  gap: 10px;
-  margin-top: 26px;
+  gap: 7px;
+  margin-top: 0;
 }
 
 label {
   color: var(--ink);
   font-weight: 750;
+  font-size: 0.95rem;
 }
 
 input,
@@ -219,7 +341,7 @@ textarea {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: 11px 13px;
   color: var(--ink);
   background: #ffffff;
   outline: none;
@@ -251,6 +373,13 @@ textarea:focus {
   font-weight: 850;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
+
+.login-panel .primary-button {
+  min-height: 48px;
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
 
 .primary-button {
   color: #ffffff;
@@ -1574,12 +1703,64 @@ textarea:focus {
   }
 
   .login-panel {
+    height: 100vh;
     min-height: 100vh;
+  }
+
+  .login-card {
+    width: min(100%, 500px);
   }
 
   .sidebar {
     position: static;
     height: auto;
+    gap: 0;
+    padding: 14px 16px;
+  }
+
+  .sidebar-brand {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .menu-brand {
+    display: grid;
+  }
+
+  .menu-lines {
+    display: grid;
+  }
+
+  .nav-list,
+  .sidebar .secondary-button {
+    display: none;
+  }
+
+  .sidebar.mobile-open {
+    gap: 18px;
+    padding-bottom: 18px;
+  }
+
+  .sidebar.mobile-open .sidebar-brand {
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .sidebar.mobile-open .nav-list,
+  .sidebar.mobile-open .secondary-button {
+    display: grid;
+  }
+
+  .sidebar.mobile-open .menu-lines span:nth-child(1) {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .sidebar.mobile-open .menu-lines span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .sidebar.mobile-open .menu-lines span:nth-child(3) {
+    transform: translate(-50%, -50%) rotate(-45deg);
   }
 
   .flow-steps {
@@ -1588,6 +1769,14 @@ textarea:focus {
 
   .filter-actions {
     justify-items: stretch;
+  }
+
+  .topbar {
+    align-items: stretch;
+  }
+
+  .topbar-actions {
+    justify-content: space-between;
   }
 }
 
@@ -1598,6 +1787,62 @@ textarea:focus {
   .panel,
   .metric-card {
     padding: 20px;
+  }
+
+  .content {
+    padding: 14px;
+  }
+
+  .topbar,
+  .quick-tabs,
+  .hero-section,
+  .summary-card,
+  .risk-panel,
+  .panel,
+  .metric-card,
+  .app-footer {
+    border-radius: 8px;
+  }
+
+  .topbar {
+    padding: 14px;
+  }
+
+  .topbar strong {
+    font-size: 0.9rem;
+  }
+
+  .topbar-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .topbar-actions .ghost-button {
+    width: 100%;
+  }
+
+  .quick-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .quick-tabs a {
+    justify-content: center;
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    text-align: center;
+    font-size: 0.82rem;
+  }
+
+  .quick-tabs a:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, 180px);
   }
 
   .summary-grid,
@@ -1640,4 +1885,30 @@ textarea:focus {
   .list-actions button {
     width: 100%;
   }
+
+  .login-card {
+    padding: 0;
+  }
+
+  .login-heading {
+    margin: 14px 0 12px;
+  }
+
+  .login-heading h1 {
+    font-size: clamp(2.25rem, 11vw, 3rem);
+  }
+
+  .login-heading p {
+    font-size: 0.92rem;
+  }
+
+  .login-meta {
+    margin-bottom: 14px;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 48px;
+  }
+
 }

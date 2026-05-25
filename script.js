@@ -37,6 +37,9 @@ const regionAnalysis = document.getElementById("regionAnalysis");
 const reportToday = document.getElementById("reportToday");
 const reportInsight = document.getElementById("reportInsight");
 const mapFallback = document.getElementById("mapFallback");
+const mobileMenuButton = document.getElementById("mobileMenuButton");
+const sidebar = document.querySelector(".sidebar");
+const navList = document.querySelector(".nav-list");
 
 const metricElements = {
   total: document.getElementById("totalOccurrences"),
@@ -212,6 +215,7 @@ function showToast(message, type = "success") {
 }
 
 function showDashboard() {
+  closeMobileMenu();
   loginScreen.classList.add("hidden");
   dashboardScreen.classList.remove("hidden");
   renderDashboard();
@@ -660,6 +664,18 @@ function togglePresentationMode() {
   showToast(isActive ? "Modo apresentação ativado." : "Modo apresentação desativado.");
 }
 
+function toggleMobileMenu() {
+  const isOpen = sidebar.classList.toggle("mobile-open");
+  mobileMenuButton.setAttribute("aria-expanded", String(isOpen));
+  mobileMenuButton.setAttribute("aria-label", isOpen ? "Fechar menu de navegação" : "Abrir menu de navegação");
+}
+
+function closeMobileMenu() {
+  sidebar.classList.remove("mobile-open");
+  mobileMenuButton.setAttribute("aria-expanded", "false");
+  mobileMenuButton.setAttribute("aria-label", "Abrir menu de navegação");
+}
+
 loginForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -746,6 +762,12 @@ emptyClearButton.addEventListener("click", clearFilters);
 resetDataButton.addEventListener("click", resetData);
 exportButton.addEventListener("click", exportOccurrences);
 presentationButton.addEventListener("click", togglePresentationMode);
+mobileMenuButton.addEventListener("click", toggleMobileMenu);
+navList.addEventListener("click", (event) => {
+  if (event.target.closest("a")) {
+    closeMobileMenu();
+  }
+});
 closeModalButton.addEventListener("click", closeOccurrenceDetails);
 detailModal.addEventListener("click", (event) => {
   if (event.target.hasAttribute("data-close-modal")) {
